@@ -16,6 +16,7 @@ replace (
 
 	github.com/rancher/rancher/pkg/apis => ./pkg/apis
 	github.com/rancher/rancher/pkg/client => ./pkg/client
+	github.com/rancher/shepherd => github.com/anupama2501/shepherd v0.0.0-20240212234820-eeade2e56a69
 
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc => go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.35.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp => go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.35.1
@@ -168,7 +169,7 @@ require (
 	github.com/antihax/optional v1.0.0
 	github.com/containers/image/v5 v5.25.0
 	github.com/rancher/rancher/pkg/apis v0.0.0-20230915232223-a9ea4ce4a5ba
-	github.com/rancher/shepherd v0.0.0-20240205165058-79095d1622f8
+	github.com/rancher/shepherd v0.0.0-20240212210618-6f6f377a7e21
 	go.qase.io/client v0.0.0-20231114201952-65195ec001fa
 )
 
@@ -214,6 +215,7 @@ require (
 	github.com/opencontainers/selinux v1.11.0 // indirect
 	github.com/ostreedev/ostree-go v0.0.0-20210805093236-719684c64e4f // indirect
 	github.com/proglottis/gpgme v0.1.3 // indirect
+	github.com/rancher/types v0.0.0-20220328215343-4370ff10ecd5 // indirect
 	github.com/sigstore/fulcio v1.2.0 // indirect
 	github.com/sigstore/rekor v1.1.1 // indirect
 	github.com/sigstore/sigstore v1.6.3 // indirect
