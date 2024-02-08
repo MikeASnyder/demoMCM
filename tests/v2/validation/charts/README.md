@@ -18,3 +18,18 @@ From there, please use one of the following links to check charts tests:
 1. [Monitoring Chart](monitoring_test.go)
 2. [Gatekeeper Chart](gatekeeper_test.go)
 3. [Istio Chart](istio_test.go)
+4. [CIS Benchmark](cisbenchmark_test.go)
+
+For the CIS Benchmark Chart testing, set the following config. 
+
+```json
+"rancher": { 
+  "host": "<rancher-server-host>",
+  "adminToken": "<rancher-admin-token>",
+  "insecure": true/optional,
+  "cleanup": false/optional,
+  "clusterName": "<cluster-to-run-test>"
+cis:
+ profileName: "<CIS Profile Name>"
+}
+```
