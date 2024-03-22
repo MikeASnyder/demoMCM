@@ -12,8 +12,8 @@ const (
 	AzureADConfigFieldCreatorID             = "creatorId"
 	AzureADConfigFieldEnabled               = "enabled"
 	AzureADConfigFieldEndpoint              = "endpoint"
-	AzureADConfigFieldFilterGroupMembership = "filterGroupMembership"
 	AzureADConfigFieldGraphEndpoint         = "graphEndpoint"
+	AzureADConfigFieldGroupMembershipFilter = "groupMembershipFilter"
 	AzureADConfigFieldLabels                = "labels"
 	AzureADConfigFieldName                  = "name"
 	AzureADConfigFieldOwnerReferences       = "ownerReferences"
@@ -37,8 +37,8 @@ type AzureADConfig struct {
 	CreatorID             string            `json:"creatorId,omitempty" yaml:"creatorId,omitempty"`
 	Enabled               bool              `json:"enabled,omitempty" yaml:"enabled,omitempty"`
 	Endpoint              string            `json:"endpoint,omitempty" yaml:"endpoint,omitempty"`
-	FilterGroupMembership string            `json:"filterGroupMembership,omitempty" yaml:"filterGroupMembership,omitempty"`
 	GraphEndpoint         string            `json:"graphEndpoint,omitempty" yaml:"graphEndpoint,omitempty"`
+	GroupMembershipFilter string            `json:"groupMembershipFilter,omitempty" yaml:"groupMembershipFilter,omitempty"`
 	Labels                map[string]string `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Name                  string            `json:"name,omitempty" yaml:"name,omitempty"`
 	OwnerReferences       []OwnerReference  `json:"ownerReferences,omitempty" yaml:"ownerReferences,omitempty"`

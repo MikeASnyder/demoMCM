@@ -129,7 +129,7 @@ func (c azureMSGraphClient) LoginUser(config *v32.AzureADConfig, credential *v32
 	userPrincipal.Me = true
 	logrus.Debugf("[%s] Completed getting user info from AzureAD", providerLogPrefix)
 
-	userGroups, err := c.ListGroupMemberships(GetPrincipalID(userPrincipal), config.FilterGroupMembership)
+	userGroups, err := c.ListGroupMemberships(GetPrincipalID(userPrincipal), config.GroupMembershipFilter)
 	if err != nil {
 		return v3.Principal{}, nil, "", err
 	}

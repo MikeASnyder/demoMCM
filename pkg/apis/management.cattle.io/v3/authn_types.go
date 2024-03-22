@@ -288,7 +288,7 @@ type AzureADConfig struct {
 	ApplicationID         string `json:"applicationId,omitempty" norman:"required,notnullable"`
 	ApplicationSecret     string `json:"applicationSecret,omitempty" norman:"required,type=password"`
 	RancherURL            string `json:"rancherUrl,omitempty" norman:"required,notnullable"`
-	FilterGroupMembership string `json:"filterGroupMembership,omitempty"`
+	GroupMembershipFilter string `json:"groupMembershipFilter,omitempty"`
 }
 
 type AzureADConfigTestOutput struct {
