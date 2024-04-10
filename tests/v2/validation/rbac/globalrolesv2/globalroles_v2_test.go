@@ -3,6 +3,8 @@
 package globalrolesv2
 
 import (
+	"context"
+	"github.com/rancher/shepherd/extensions/kubeconfig"
 	"testing"
 
 	log "github.com/sirupsen/logrus"
@@ -16,6 +18,7 @@ import (
 
 	v3 "github.com/rancher/rancher/pkg/apis/management.cattle.io/v3"
 
+	"github.com/rancher/shepherd/clients/wrangler/clients"
 	"github.com/rancher/shepherd/extensions/clusters"
 	"github.com/rancher/shepherd/extensions/defaults"
 	"github.com/rancher/shepherd/extensions/kubeapi/rbac"
@@ -28,8 +31,10 @@ import (
 
 type GlobalRolesV2TestSuite struct {
 	suite.Suite
-	client  *rancher.Client
-	session *session.Session
+	client                   *rancher.Client
+	localwranglerclient      *clients.Clients
+	downstreamwranglerclient *clients.Clients
+	session                  *session.Session
 }
 
 func (gr *GlobalRolesV2TestSuite) TearDownSuite() {
@@ -44,11 +49,23 @@ func (gr *GlobalRolesV2TestSuite) SetupSuite() {
 	require.NoError(gr.T(), err)
 
 	gr.client = client
+
+	clusterID, err := clusters.GetClusterIDByName(gr.client, "local")
+	require.NoError(gr.T(), err)
+	clientcfg, err := kubeconfig.GetKubeconfig(gr.client, clusterID)
+	gr.localwranglerclient, err = clients.NewForConfig(context.Background(), *clientcfg, testSession)
+	require.NoError(gr.T(), err)
+
+	clusterID, err = clusters.GetClusterIDByName(gr.client, gr.client.RancherConfig.ClusterName)
+	require.NoError(gr.T(), err)
+	clientcfg, err = kubeconfig.GetKubeconfig(gr.client, clusterID)
+	gr.downstreamwranglerclient, err = clients.NewForConfig(context.Background(), *clientcfg, testSession)
+	require.NoError(gr.T(), err)
 }
 
 func (gr *GlobalRolesV2TestSuite) validateRBACResources(createdUser *management.User, inheritedRoles []string) (string, int) {
 	log.Info("Verify that the global role binding is created for the user.")
-	grbOwner, err := getGlobalRoleBindingForUser(gr.client, createdUser.ID)
+	grbOwner, err := getGlobalRoleBindingForUserWrangler(gr.localwranglerclient, createdUser.ID)
 	require.NoError(gr.T(), err)
 	require.NotEmpty(gr.T(), grbOwner, "Global Role Binding not found for the user")
 	grbName := grbOwner
@@ -59,6 +76,7 @@ func (gr *GlobalRolesV2TestSuite) validateRBACResources(createdUser *management.
 	clusterCount := len(clusterNames)
 	expectedCrtbCount := clusterCount * len(inheritedRoles)
 	crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRoles(gr.client, grbOwner, expectedCrtbCount)
+	//crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRolesWrangler(gr.localwranglerclient, grbOwner, expectedCrtbCount)
 	require.NoError(gr.T(), err)
 	actualCrtbCount := len(crtbs.Items)
 	require.Equal(gr.T(), expectedCrtbCount, actualCrtbCount, "Unexpected number of ClusterRoleTemplateBindings: Expected %d, Actual %d", expectedCrtbCount, actualCrtbCount)
@@ -85,7 +103,7 @@ func (gr *GlobalRolesV2TestSuite) TestCreateUserWithInheritedClusterRoles() {
 
 	log.Info("Create a global role with inheritedClusterRoles.")
 	inheritedClusterRoles := []string{roleOwner}
-	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRoles(gr.client, inheritedClusterRoles)
+	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRolesWrangler(gr.localwranglerclient, inheritedClusterRoles)
 	require.NoError(gr.T(), err)
 
 	log.Info("Create a user with global role standard user and custom global role.")
@@ -101,7 +119,7 @@ func (gr *GlobalRolesV2TestSuite) TestCreateUserWithMultipleInheritedClusterRole
 
 	log.Info("Create a global role with inheritedClusterRoles.")
 	inheritedClusterRoles := []string{roleCrtbView, roleProjectsCreate, roleProjectsView}
-	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRoles(gr.client, inheritedClusterRoles)
+	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRolesWrangler(gr.localwranglerclient, inheritedClusterRoles)
 	require.NoError(gr.T(), err)
 
 	log.Info("Create a user with global role standard user and custom global role.")
@@ -126,7 +144,7 @@ func (gr *GlobalRolesV2TestSuite) TestCreateUserWithInheritedCustomClusterRole()
 
 	log.Info("Create a global role with inheritedClusterRoles.")
 	inheritedClusterRoles := []string{inheritedRoleTemplate.ID}
-	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRoles(gr.client, inheritedClusterRoles)
+	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRolesWrangler(gr.localwranglerclient, inheritedClusterRoles)
 	require.NoError(gr.T(), err)
 
 	log.Info("Create a user with global role standard user and custom global role.")
@@ -150,7 +168,7 @@ func (gr *GlobalRolesV2TestSuite) TestClusterCreationAfterAddingGlobalRoleWithIn
 
 	log.Info("Create a global role with inheritedClusterRoles.")
 	inheritedClusterRoles := []string{roleMember}
-	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRoles(gr.client, inheritedClusterRoles)
+	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRolesWrangler(gr.localwranglerclient, inheritedClusterRoles)
 	require.NoError(gr.T(), err)
 
 	log.Info("Create a user with global role standard user and custom global role.")
@@ -184,7 +202,7 @@ func (gr *GlobalRolesV2TestSuite) TestUpdateExistingUserWithCustomGlobalRoleInhe
 
 	log.Info("Create a global role with inheritedClusterRoles.")
 	inheritedClusterRoles := []string{roleOwner}
-	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRoles(gr.client, inheritedClusterRoles)
+	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRolesWrangler(gr.localwranglerclient, inheritedClusterRoles)
 	require.NoError(gr.T(), err)
 
 	log.Info("Create a user with global role standard user.")
@@ -215,7 +233,7 @@ func (gr *GlobalRolesV2TestSuite) TestUserDeletionAndResourceCleanupWithInherite
 
 	log.Info("Create a global role with inheritedClusterRoles.")
 	inheritedClusterRoles := []string{roleOwner}
-	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRoles(gr.client, inheritedClusterRoles)
+	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRolesWrangler(gr.localwranglerclient, inheritedClusterRoles)
 	require.NoError(gr.T(), err)
 
 	log.Info("Create a user with global role standard user and custom global role.")
@@ -277,7 +295,7 @@ func (gr *GlobalRolesV2TestSuite) TestUserWithInheritedClusterRolesImpactFromDel
 
 	log.Info("Create a global role with inheritedClusterRoles.")
 	inheritedClusterRoles := []string{roleOwner}
-	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRoles(gr.client, inheritedClusterRoles)
+	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRolesWrangler(gr.localwranglerclient, inheritedClusterRoles)
 	require.NoError(gr.T(), err)
 
 	log.Info("Create a user with global role standard user and custom global role.")
@@ -343,7 +361,7 @@ func (gr *GlobalRolesV2TestSuite) TestUserWithInheritedClusterRolesImpactFromDel
 
 	log.Info("Create a global role with inheritedClusterRoles.")
 	inheritedClusterRoles := []string{roleMember}
-	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRoles(gr.client, inheritedClusterRoles)
+	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRolesWrangler(gr.localwranglerclient, inheritedClusterRoles)
 	require.NoError(gr.T(), err)
 
 	log.Info("Create a user with global role standard user and custom global role.")
@@ -423,7 +441,7 @@ func (gr *GlobalRolesV2TestSuite) TestUserWithInheritedClusterRolesImpactFromClu
 
 	log.Info("Create a global role with inheritedClusterRoles.")
 	inheritedClusterRoles := []string{roleOwner}
-	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRoles(gr.client, inheritedClusterRoles)
+	createdGlobalRole, err := createGlobalRoleWithInheritedClusterRolesWrangler(gr.localwranglerclient, inheritedClusterRoles)
 	require.NoError(gr.T(), err)
 
 	log.Info("Create a user with global role standard user and custom global role.")
@@ -441,7 +459,8 @@ func (gr *GlobalRolesV2TestSuite) TestUserWithInheritedClusterRolesImpactFromClu
 	require.Equal(gr.T(), expectedClusterCount, actualClusterCount, "Unexpected number of Clusters: Expected %d, Actual %d", expectedClusterCount, actualClusterCount)
 
 	log.Info("Delete the RKE2 downstream cluster.")
-	clusters.DeleteK3SRKE2Cluster(userClient, rke2SteveObject.ID)
+	err = clusters.DeleteK3SRKE2Cluster(userClient, rke2SteveObject.ID)
+	require.NoError(gr.T(), err)
 
 	log.Info("Verify that the global role is not deleted.")
 	listOpt := metav1.ListOptions{
