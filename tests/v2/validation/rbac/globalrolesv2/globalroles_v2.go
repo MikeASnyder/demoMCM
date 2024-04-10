@@ -13,6 +13,7 @@ import (
 	"github.com/rancher/shepherd/clients/rancher"
 	management "github.com/rancher/shepherd/clients/rancher/generated/management/v3"
 	v1 "github.com/rancher/shepherd/clients/rancher/v1"
+	wranglerClient "github.com/rancher/shepherd/clients/wrangler/clients"
 
 	"github.com/rancher/shepherd/extensions/clusters"
 	"github.com/rancher/shepherd/extensions/defaults"
@@ -71,6 +72,17 @@ func createGlobalRoleWithInheritedClusterRoles(client *rancher.Client, inherited
 	return createdGlobalRole, nil
 }
 
+func createGlobalRoleWithInheritedClusterRolesWrangler(wranglerclient *wranglerClient.Clients, inheritedRoles []string) (*v3.GlobalRole, error) {
+	globalRole.Name = namegen.AppendRandomString("testgr")
+	globalRole.InheritedClusterRoles = inheritedRoles
+	createdGlobalRole, err := wranglerclient.Mgmt.GlobalRole().Create(&globalRole)
+	if err != nil {
+		return nil, err
+	}
+
+	return createdGlobalRole, nil
+}
+
 func getGlobalRoleBindingForUser(client *rancher.Client, userID string) (string, error) {
 	grblist, err := rbac.ListGlobalRoleBindings(client, metav1.ListOptions{})
 
@@ -85,6 +97,49 @@ func getGlobalRoleBindingForUser(client *rancher.Client, userID string) (string,
 	}
 
 	return "", nil
+}
+
+func getGlobalRoleBindingForUserWrangler(clients *wranglerClient.Clients, userID string) (string, error) {
+	grblist, err := clients.Mgmt.GlobalRoleBinding().List(metav1.ListOptions{})
+	if err != nil {
+		return "", err
+	}
+
+	for _, grbs := range grblist.Items {
+		if grbs.GlobalRoleName == globalRole.Name && grbs.UserName == userID {
+			return grbs.Name, nil
+		}
+	}
+
+	return "", nil
+}
+
+func listClusterRoleTemplateBindingsForInheritedClusterRolesWrangler(clients *wranglerClient.Clients, grbOwner string, expectedCount int) (*v3.ClusterRoleTemplateBindingList, error) {
+	req, err := labels.NewRequirement(crtbOwnerLabel, selection.In, []string{grbOwner})
+	if err != nil {
+		return nil, err
+	}
+
+	selector := labels.NewSelector().Add(*req)
+
+	var crtbs *v3.ClusterRoleTemplateBindingList
+
+	err = kwait.Poll(defaults.FiveHundredMillisecondTimeout, defaults.OneMinuteTimeout, func() (done bool, pollErr error) {
+		crtbs, pollErr := clients.Mgmt.ClusterRoleTemplateBinding().List(namespace, metav1.ListOptions{
+			LabelSelector: selector.String(),
+		})
+		if pollErr != nil {
+			return false, pollErr
+		}
+		if len(crtbs.Items) == expectedCount {
+			return true, nil
+		}
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return crtbs, nil
 }
 
 func listClusterRoleTemplateBindingsForInheritedClusterRoles(client *rancher.Client, grbOwner string, expectedCount int) (*v3.ClusterRoleTemplateBindingList, error) {
