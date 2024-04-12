@@ -439,4 +439,4 @@ require (
 )
 
 //TODO: Remove this before PR
-replace github.com/rancher/shepherd => /Users/dnewman/go/src/github.com/rancher/shepherd
+replace github.com/rancher/shepherd => github.com/floatingman/shepherd v0.0.0-20240411161651-ac5e6cd8a7f9
