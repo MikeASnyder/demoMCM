@@ -943,8 +943,8 @@ github.com/fatih/color v1.15.0/go.mod h1:0h5ZqXfHYED7Bhv2ZJamyIOUej9KtShiJESRwBD
 github.com/felixge/httpsnoop v1.0.1/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
 github.com/felixge/httpsnoop v1.0.3 h1:s/nj+GCswXYzN5v2DpNMuMQYe+0DDwt5WVCU6CWBdXk=
 github.com/felixge/httpsnoop v1.0.3/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
-github.com/floatingman/shepherd v0.0.0-20240411161651-ac5e6cd8a7f9 h1:1RTABum8RjdMq6QOq/vJ/LTio81aKEh5R/HyXx5V5a8=
-github.com/floatingman/shepherd v0.0.0-20240411161651-ac5e6cd8a7f9/go.mod h1:L0AopIBWxavKx/iRhingFHEBEAQ2cQLQEdUliPnNsJQ=
+github.com/floatingman/shepherd v0.0.0-20240413000139-8e49f7418527 h1:EKAUZFWPfrb13lmBkguYt1SIZqB6QT2MsIb2Prhttbk=
+github.com/floatingman/shepherd v0.0.0-20240413000139-8e49f7418527/go.mod h1:L0AopIBWxavKx/iRhingFHEBEAQ2cQLQEdUliPnNsJQ=
 github.com/flowstack/go-jsonschema v0.1.1/go.mod h1:yL7fNggx1o8rm9RlgXv7hTBWxdBM0rVwpMwimd3F3N0=
 github.com/fogleman/gg v1.2.1-0.20190220221249-0403632d5b90/go.mod h1:R/bRT+9gY/C5z7JzPU0zXsXHKM4/ayA+zqcVNZzPa1k=
 github.com/fogleman/gg v1.3.0/go.mod h1:R/bRT+9gY/C5z7JzPU0zXsXHKM4/ayA+zqcVNZzPa1k=
