@@ -1,8 +1,6 @@
 module github.com/rancher/rancher
 
-go 1.22
-
-toolchain go1.22.1
+go 1.21
 
 replace (
 	github.com/containerd/containerd => github.com/containerd/containerd v1.6.22 // for compatibilty with docker 20.10.x
@@ -108,17 +106,17 @@ require (
 	github.com/prometheus/client_golang v1.19.0
 	github.com/prometheus/client_model v0.5.0
 	github.com/prometheus/common v0.48.0
-	github.com/rancher/aks-operator v1.3.0-rc5
+	github.com/rancher/aks-operator v1.2.1
 	github.com/rancher/apiserver v0.0.0-20240207153744-69b3c2b56f3f
 	github.com/rancher/channelserver v0.6.1-0.20240212155841-07630c8295da
 	github.com/rancher/dynamiclistener v0.4.0
-	github.com/rancher/eks-operator v1.4.0-rc5
+	github.com/rancher/eks-operator v1.3.1
 	github.com/rancher/fleet/pkg/apis v0.9.1-rc.2.0.20240213164401-2c6b1019687c
-	github.com/rancher/gke-operator v1.3.0-rc6
+	github.com/rancher/gke-operator v1.2.1
 	github.com/rancher/kubernetes-provider-detector v0.1.5
 	github.com/rancher/lasso v0.0.0-20240123150939-7055397d6dfa
 	github.com/rancher/machine v0.15.0-rancher110
-	github.com/rancher/norman v0.0.0-20240207153100-3bb70b772b52
+	github.com/rancher/norman v0.0.0-20240206180703-6eda4bc94b4c
 	github.com/rancher/rancher/pkg/client v0.0.0
 	github.com/rancher/remotedialer v0.3.0
 	github.com/rancher/rke v1.5.9-rc1
