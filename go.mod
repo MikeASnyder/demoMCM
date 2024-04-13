@@ -108,17 +108,17 @@ require (
 	github.com/prometheus/client_golang v1.19.0
 	github.com/prometheus/client_model v0.5.0
 	github.com/prometheus/common v0.48.0
-	github.com/rancher/aks-operator v1.2.1
+	github.com/rancher/aks-operator v1.3.0-rc5
 	github.com/rancher/apiserver v0.0.0-20240207153744-69b3c2b56f3f
 	github.com/rancher/channelserver v0.6.1-0.20240212155841-07630c8295da
 	github.com/rancher/dynamiclistener v0.4.0
-	github.com/rancher/eks-operator v1.3.1
+	github.com/rancher/eks-operator v1.4.0-rc5
 	github.com/rancher/fleet/pkg/apis v0.9.1-rc.2.0.20240213164401-2c6b1019687c
-	github.com/rancher/gke-operator v1.2.1
+	github.com/rancher/gke-operator v1.3.0-rc6
 	github.com/rancher/kubernetes-provider-detector v0.1.5
 	github.com/rancher/lasso v0.0.0-20240123150939-7055397d6dfa
 	github.com/rancher/machine v0.15.0-rancher110
-	github.com/rancher/norman v0.0.0-20240207153035-cb54924f25c7
+	github.com/rancher/norman v0.0.0-20240207153100-3bb70b772b52
 	github.com/rancher/rancher/pkg/client v0.0.0
 	github.com/rancher/remotedialer v0.3.0
 	github.com/rancher/rke v1.5.9-rc1
@@ -167,14 +167,13 @@ require (
 	github.com/antihax/optional v1.0.0
 	github.com/containers/image/v5 v5.25.0
 	github.com/google/gnostic-models v0.6.8
-	github.com/rancher/rancher/pkg/apis v0.0.0-20240213233515-935d309ebad4
+	github.com/rancher/rancher/pkg/apis v0.0.0-20240326194312-c5b4413739fb
 	github.com/rancher/shepherd v0.0.0-20240412143253-50c4247b5902
 	go.qase.io/client v0.0.0-20231114201952-65195ec001fa
 )
 
 require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
-	dario.cat/mergo v1.0.0 // indirect
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d // indirect
@@ -403,7 +402,7 @@ require (
 	gomodules.xyz/jsonpatch/v2 v2.3.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
@@ -425,4 +424,4 @@ require (
 )
 
 //TODO: Remove this before PR
-replace github.com/rancher/shepherd => /Users/dnewman/go/src/github.com/rancher/shepherd
+replace github.com/rancher/shepherd => github.com/floatingman/shepherd v0.0.0-20240413005508-64e474d065d3
