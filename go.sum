@@ -891,8 +891,8 @@ github.com/fatih/color v1.15.0/go.mod h1:0h5ZqXfHYED7Bhv2ZJamyIOUej9KtShiJESRwBD
 github.com/felixge/httpsnoop v1.0.1/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
 github.com/felixge/httpsnoop v1.0.3 h1:s/nj+GCswXYzN5v2DpNMuMQYe+0DDwt5WVCU6CWBdXk=
 github.com/felixge/httpsnoop v1.0.3/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
-github.com/floatingman/shepherd v0.0.0-20240413005508-64e474d065d3 h1:O6/FBAlUQJNoMgX0BptpqfzNlo/Y2UQ5+ZR0cd89DFU=
-github.com/floatingman/shepherd v0.0.0-20240413005508-64e474d065d3/go.mod h1:qDZwA5b3oIig3ZRIxP8B8qy6vK8tVK6crDfkG8t0e38=
+github.com/floatingman/shepherd v0.0.0-20240415172508-a1f05065c2a4 h1:bEhOH8Hd62eY4G0JVLKSP3FRhQ+0hXAns2a+7u694wg=
+github.com/floatingman/shepherd v0.0.0-20240415172508-a1f05065c2a4/go.mod h1:aF+34m7gi1PkHYqMd0kCcPJMyr4blVCsj0RgijAyXPg=
 github.com/fogleman/gg v1.2.1-0.20190220221249-0403632d5b90/go.mod h1:R/bRT+9gY/C5z7JzPU0zXsXHKM4/ayA+zqcVNZzPa1k=
 github.com/fogleman/gg v1.3.0/go.mod h1:R/bRT+9gY/C5z7JzPU0zXsXHKM4/ayA+zqcVNZzPa1k=
 github.com/foxcpp/go-mockdns v1.0.0 h1:7jBqxd3WDWwi/6WhDvacvH1XsN3rOLXyHM1uhvIx6FI=
