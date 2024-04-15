@@ -57,7 +57,7 @@ replace (
 require (
 	github.com/antihax/optional v1.0.0
 	github.com/containers/image/v5 v5.26.0
-	github.com/rancher/rancher/pkg/apis v0.0.0-20240126142034-676c3eb3dfa5
+	github.com/rancher/rancher/pkg/apis v0.0.0-20240415062435-07e4313daf43
 	github.com/rancher/shepherd v0.0.0-20240412143227-f816adca9592
 	go.qase.io/client v0.0.0-20231114201952-65195ec001fa
 )
@@ -132,7 +132,7 @@ require (
 	github.com/rancher/wrangler/v2 v2.1.4
 	github.com/robfig/cron v1.1.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/tomnomnom/linkheader v0.0.0-20180905144013-02ca5825eb80
 	github.com/urfave/cli v1.22.14
 	github.com/vishvananda/netlink v1.2.1-beta.2
@@ -388,7 +388,7 @@ require (
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/cobra v1.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/vishvananda/netns v0.0.2 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
@@ -440,4 +440,4 @@ require (
 )
 
 //TODO: Remove this before PR
-replace github.com/rancher/shepherd => github.com/floatingman/shepherd v0.0.0-20240415170202-637038e6247e
+replace github.com/rancher/shepherd => github.com/floatingman/shepherd v0.0.0-20240415214917-b6fbc467fd33
