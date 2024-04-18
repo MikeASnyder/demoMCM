@@ -57,7 +57,7 @@ replace (
 require (
 	github.com/antihax/optional v1.0.0
 	github.com/containers/image/v5 v5.26.0
-	github.com/rancher/rancher/pkg/apis v0.0.0-20240126142034-676c3eb3dfa5
+	github.com/rancher/rancher/pkg/apis v0.0.0-20240415062435-07e4313daf43
 	github.com/rancher/shepherd v0.0.0-20240412143227-f816adca9592
 	go.qase.io/client v0.0.0-20231114201952-65195ec001fa
 )
@@ -438,3 +438,6 @@ require (
 	sigs.k8s.io/kustomize/kyaml v0.14.2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 )
+
+//TODO: Remove this before PR
+replace github.com/rancher/shepherd => github.com/floatingman/shepherd v0.0.0-20240415214917-b6fbc467fd33
