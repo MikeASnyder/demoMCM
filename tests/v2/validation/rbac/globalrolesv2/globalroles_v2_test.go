@@ -50,7 +50,6 @@ func (gr *GlobalRolesV2TestSuite) SetupSuite() {
 func (gr *GlobalRolesV2TestSuite) validateRBACResources(createdUser *management.User, inheritedRoles []string) (string, int) {
 	log.Info("Verify that the global role binding is created for the user.")
 	grbOwner, err := getGlobalRoleBindingForUserWrangler(gr.client, createdUser.ID)
-	//grbOwner, err := getGlobalRoleBindingForUser(gr.client, createdUser.ID)
 	require.NoError(gr.T(), err)
 	require.NotEmpty(gr.T(), grbOwner, "Global Role Binding not found for the user")
 	grbName := grbOwner
@@ -61,7 +60,6 @@ func (gr *GlobalRolesV2TestSuite) validateRBACResources(createdUser *management.
 	clusterCount := len(clusterNames)
 	expectedCrtbCount := clusterCount * len(inheritedRoles)
 	crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRoles(gr.client, grbOwner, expectedCrtbCount)
-	//crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRolesWrangler(gr.client, grbOwner, expectedCrtbCount)
 	require.NoError(gr.T(), err)
 	actualCrtbCount := len(crtbs.Items)
 	require.Equal(gr.T(), expectedCrtbCount, actualCrtbCount, "Unexpected number of ClusterRoleTemplateBindings: Expected %d, Actual %d", expectedCrtbCount, actualCrtbCount)
@@ -242,7 +240,7 @@ func (gr *GlobalRolesV2TestSuite) TestUserDeletionAndResourceCleanupWithInherite
 	log.Infof("Verify that the global role binding %s is deleted for the user.", grbName)
 	var grbOwner string
 	err = kwait.Poll(defaults.FiveHundredMillisecondTimeout, defaults.TenSecondTimeout, func() (done bool, pollErr error) {
-		grbOwner, pollErr = getGlobalRoleBindingForUser(gr.client, createdUser.ID)
+		grbOwner, pollErr = getGlobalRoleBindingForUserWrangler(gr.client, createdUser.ID)
 		if pollErr != nil {
 			return false, pollErr
 		}
@@ -256,8 +254,7 @@ func (gr *GlobalRolesV2TestSuite) TestUserDeletionAndResourceCleanupWithInherite
 
 	log.Info("Verify that the cluster role template bindings are deleted for the downstream clusters.")
 	expectedCrtbCount := 0
-	crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRolesWrangler(gr.client, grbOwner, expectedCrtbCount)
-	//crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRoles(gr.client, grbOwner, expectedCrtbCount)
+	crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRoles(gr.client, grbOwner, expectedCrtbCount)
 	require.NoError(gr.T(), err)
 	actualCrtbCount := len(crtbs.Items)
 	require.Equal(gr.T(), expectedCrtbCount, actualCrtbCount, "Unexpected number of ClusterRoleTemplateBindings: Expected %d, Actual %d", expectedCrtbCount, actualCrtbCount)
@@ -311,13 +308,13 @@ func (gr *GlobalRolesV2TestSuite) TestUserWithInheritedClusterRolesImpactFromDel
 	require.NotEmpty(gr.T(), grList, "Global Role does not exist.")
 
 	log.Info("Verify that the global role binding is deleted for the user.")
-	grbOwner, err := getGlobalRoleBindingForUser(gr.client, createdUser.ID)
+	grbOwner, err := getGlobalRoleBindingForUserWrangler(gr.client, createdUser.ID)
 	require.NoError(gr.T(), err)
 	require.Empty(gr.T(), grbOwner, "Global Role Binding exists for the user.")
 
 	log.Info("Verify that the cluster role template bindings are deleted for the downstream clusters.")
 	expectedCrtbCount := 0
-	crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRolesWrangler(gr.client, grbOwner, expectedCrtbCount)
+	crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRoles(gr.client, grbOwner, expectedCrtbCount)
 	require.NoError(gr.T(), err)
 	actualCrtbCount := len(crtbs.Items)
 	require.Equal(gr.T(), expectedCrtbCount, actualCrtbCount, "Unexpected number of ClusterRoleTemplateBindings: Expected %d, Actual %d", expectedCrtbCount, actualCrtbCount)
@@ -384,12 +381,12 @@ func (gr *GlobalRolesV2TestSuite) TestUserWithInheritedClusterRolesImpactFromDel
 
 	for _, user := range users {
 		log.Infof("Verify that the global role binding is not deleted for user %s.", user.ID)
-		grbOwner, err := getGlobalRoleBindingForUser(gr.client, user.ID)
+		grbOwner, err := getGlobalRoleBindingForUserWrangler(gr.client, user.ID)
 		require.NoError(gr.T(), err)
 		require.NotEmpty(gr.T(), grbOwner, "Global Role Binding does not exist for user %s", user.ID)
 
 		log.Infof("Verify that the cluster role template bindings are deleted for user %s.", user.ID)
-		crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRolesWrangler(gr.client, grbOwner, 0)
+		crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRoles(gr.client, grbOwner, 0)
 		require.NoError(gr.T(), err)
 		actualCrtbCount := len(crtbs.Items)
 		require.Equal(gr.T(), 0, actualCrtbCount, "Unexpected number of ClusterRoleTemplateBindings for user %s: Expected %d, Actual %d", user.ID, 0, actualCrtbCount)
@@ -457,13 +454,13 @@ func (gr *GlobalRolesV2TestSuite) TestUserWithInheritedClusterRolesImpactFromClu
 	require.NotEmpty(gr.T(), grList, "Global Role does not exist.")
 
 	log.Info("Verify that the global role binding is not deleted for the user.")
-	grbOwner, err := getGlobalRoleBindingForUser(gr.client, createdUser.ID)
+	grbOwner, err := getGlobalRoleBindingForUserWrangler(gr.client, createdUser.ID)
 	require.NoError(gr.T(), err)
 	require.NotEmpty(gr.T(), grbOwner, "Global Role Binding does not exist for the user.")
 
 	log.Info("Verify that the cluster role template bindings are deleted for the downstream cluster.")
 	expectedCrtbCount := actualClusterCount - 1
-	crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRolesWrangler(gr.client, grbOwner, expectedCrtbCount)
+	crtbs, err := listClusterRoleTemplateBindingsForInheritedClusterRoles(gr.client, grbOwner, expectedCrtbCount)
 	require.NoError(gr.T(), err)
 	actualCrtbCount := len(crtbs.Items)
 	require.Equal(gr.T(), expectedCrtbCount, actualCrtbCount, "Unexpected number of ClusterRoleTemplateBindings: Expected %d, Actual %d", expectedCrtbCount, actualCrtbCount)
