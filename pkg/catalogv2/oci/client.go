@@ -13,6 +13,7 @@ import (
 
 	ocispecv1 "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/pkg/errors"
+	catalogv1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
 	"github.com/sirupsen/logrus"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	helmregistry "helm.sh/helm/v3/pkg/registry"
@@ -26,22 +27,10 @@ import (
 	"oras.land/oras-go/v2/registry/remote"
 	"oras.land/oras-go/v2/registry/remote/auth"
 	"oras.land/oras-go/v2/registry/remote/errcode"
-	"oras.land/oras-go/v2/registry/remote/retry"
-
-	catalogv1 "github.com/rancher/rancher/pkg/apis/catalog.cattle.io/v1"
 )
 
 // maxHelmChartTar defines what is the max size of helm chart we support.
 const maxHelmChartTarSize int64 = 20 * 1024 * 1024 // 20 MiB
-
-// Default Values for exponentialBackOff function which is used
-// by oras to retry a HTTP call when 429 response code is hit.
-var retryPolicy retry.GenericPolicy = retry.GenericPolicy{
-	Retryable: retry.DefaultPredicate,
-	MinWait:   1 * time.Second,
-	MaxWait:   5 * time.Second,
-	MaxRetry:  5,
-}
 
 // Client is an OCI client that manages Helm charts in OCI based Helm registries.
 type Client struct {
@@ -224,26 +213,8 @@ func (o *Client) getAuthClient() (*http.Client, error) {
 	baseTransport := http.DefaultTransport.(*http.Transport).Clone()
 	baseTransport.TLSClientConfig = config
 
-	if o.exponentialBackOffValues != nil {
-		if o.exponentialBackOffValues.MaxRetries > 0 {
-			retryPolicy.MaxRetry = o.exponentialBackOffValues.MaxRetries
-		}
-		if o.exponentialBackOffValues.MaxWait != nil {
-			retryPolicy.MaxWait = o.exponentialBackOffValues.MaxWait.Duration
-		}
-		if o.exponentialBackOffValues.MinWait != nil {
-			retryPolicy.MinWait = o.exponentialBackOffValues.MinWait.Duration
-		}
-	}
-	retryPolicy.Backoff = retry.ExponentialBackoff(retryPolicy.MinWait, 2, 0.2)
-
-	retryTransport := retry.NewTransport(baseTransport)
-	retryTransport.Policy = func() retry.Policy {
-		return &retryPolicy
-	}
-
 	return &http.Client{
-		Transport: retryTransport,
+		Transport: baseTransport,
 	}, nil
 }
 

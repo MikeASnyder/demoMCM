@@ -479,6 +479,7 @@ func (in *RepoStatus) DeepCopyInto(out *RepoStatus) {
 		*out = make([]genericcondition.GenericCondition, len(*in))
 		copy(*out, *in)
 	}
+	in.NextRetryAt.DeepCopyInto(&out.NextRetryAt)
 	return
 }
 
