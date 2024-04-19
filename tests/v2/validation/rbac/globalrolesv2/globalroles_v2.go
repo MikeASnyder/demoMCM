@@ -112,33 +112,36 @@ func getGlobalRoleBindingForUserWrangler(client *rancher.Client, userID string) 
 	return "", nil
 }
 
-//func listClusterRoleTemplateBindingsForInheritedClusterRolesWrangler(clients *wranglerClient.Clients, grbOwner string, expectedCount int) (*v3.ClusterRoleTemplateBindingList, error) {
-//	req, err := labels.NewRequirement(crtbOwnerLabel, selection.In, []string{grbOwner})
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	selector := labels.NewSelector().Add(*req)
-//
-//	var crtbs *v3.ClusterRoleTemplateBindingList
-//
-//	err = kwait.Poll(defaults.FiveHundredMillisecondTimeout, defaults.OneMinuteTimeout, func() (done bool, pollErr error) {
-//		crtbs, pollErr := clients.Mgmt.ClusterRoleTemplateBinding().List(namespace, metav1.ListOptions{
-//			LabelSelector: selector.String(),
-//		})
-//		if pollErr != nil {
-//			return false, pollErr
-//		}
-//		if len(crtbs.Items) == expectedCount {
-//			return true, nil
-//		}
-//		return false, nil
-//	})
-//	if err != nil {
-//		return nil, err
-//	}
-//	return crtbs, nil
-//}
+func listClusterRoleTemplateBindingsForInheritedClusterRolesWrangler(client *rancher.Client, grbOwner string, expectedCount int) (*v3.ClusterRoleTemplateBindingList, error) {
+	req, err := labels.NewRequirement(crtbOwnerLabel, selection.In, []string{grbOwner})
+	if err != nil {
+		return nil, err
+	}
+
+	selector := labels.NewSelector().Add(*req)
+
+	var crtbs *v3.ClusterRoleTemplateBindingList
+
+	err = kwait.Poll(defaults.FiveHundredMillisecondTimeout, defaults.OneMinuteTimeout, func() (done bool, pollErr error) {
+		crtbs, pollErr := client.WranglerContext.Mgmt.ClusterRoleTemplateBinding().List("", metav1.ListOptions{LabelSelector: selector.String()})
+		if pollErr != nil {
+			return false, pollErr
+		}
+		if len(crtbs.Items) == expectedCount {
+			return true, nil
+		}
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if crtbs == nil {
+		crtbs = &v3.ClusterRoleTemplateBindingList{
+			Items: []v3.ClusterRoleTemplateBinding{},
+		}
+	}
+	return crtbs, nil
+}
 
 func listClusterRoleTemplateBindingsForInheritedClusterRoles(client *rancher.Client, grbOwner string, expectedCount int) (*v3.ClusterRoleTemplateBindingList, error) {
 	req, err := labels.NewRequirement(crtbOwnerLabel, selection.In, []string{grbOwner})
