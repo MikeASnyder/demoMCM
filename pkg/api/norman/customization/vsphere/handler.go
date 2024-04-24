@@ -26,6 +26,7 @@ import (
 const (
 	UnknownFinder = iota
 	SoapFinder
+	SoapFinderExtended
 	SoapGetter
 	ContentLibraryManager
 	TagsManager
@@ -43,6 +44,7 @@ var fieldNames = map[string]int{
 	"templates":           SoapFinder,
 	"clusters":            SoapFinder,
 	"resource-pools":      SoapFinder,
+	"networks-extended":   SoapFinderExtended,
 	"guest-os":            SoapGetter,
 	"content-libraries":   ContentLibraryManager,
 	"library-templates":   ContentLibraryManager,
@@ -81,6 +83,10 @@ func (v *handler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	fieldName := mux.Vars(req)["field"]
 	dc := req.FormValue("dataCenter")
 
+	if req.Method != http.MethodGet {
+		util.ReturnHTTPError(res, req, httperror.MethodNotAllowed.Status, fmt.Sprintf("%s: method not allowed, use GET instead", httperror.MethodNotAllowed.Status))
+		return
+	}
 	if fieldName == "" || !validFieldName(fieldName) {
 		util.ReturnHTTPError(res, req, httperror.NotFound.Status, fmt.Sprintf("%s: invalid field name", httperror.NotFound.Code))
 		return
@@ -126,6 +132,13 @@ func (v *handler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 		js, err = json.Marshal(map[string][]string{"data": data})
+	case SoapFinderExtended:
+		var data []map[string]interface{}
+		if data, err = processSoapFinderExtended(req.Context(), fieldName, cc, dc); err != nil {
+			invalidBody(res, req, err)
+			return
+		}
+		js, err = json.Marshal(map[string][]map[string]interface{}{"data": data})
 	case ContentLibraryManager:
 		l := req.FormValue("library")
 		var data []string
