@@ -32,9 +32,9 @@ require (
 	github.com/rancher/eks-operator v1.4.0-rc9
 	github.com/rancher/fleet/pkg/apis v0.0.0-20231017140638-93432f288e79
 	github.com/rancher/gke-operator v1.3.0-rc6
-	github.com/rancher/norman v0.0.0-20240207153100-3bb70b772b52
+	github.com/rancher/norman v0.0.0-20240417185323-cf0f9cc85249
 	github.com/rancher/rke v1.6.0-rc1
-	github.com/rancher/wrangler/v2 v2.1.4
+	github.com/rancher/wrangler/v2 v2.2.0-rc5
 	github.com/sirupsen/logrus v1.9.3
 	k8s.io/api v0.28.8
 	k8s.io/apimachinery v0.28.8
@@ -75,7 +75,7 @@ require (
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.10.1 // indirect
-	github.com/rancher/lasso v0.0.0-20240123150939-7055397d6dfa // indirect
+	github.com/rancher/lasso v0.0.0-20240415182150-5993b260dd08 // indirect
 	github.com/rancher/wrangler v1.1.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/net v0.24.0 // indirect
@@ -98,7 +98,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9 // indirect
 	k8s.io/kubernetes v1.28.6 // indirect
 	k8s.io/utils v0.0.0-20230505201702-9f6742963106 // indirect
-	sigs.k8s.io/cli-utils v0.28.0 // indirect
+	sigs.k8s.io/cli-utils v0.35.0 // indirect
 	sigs.k8s.io/controller-runtime v0.15.3 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
