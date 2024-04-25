@@ -157,11 +157,19 @@ func TestGenerateSupportConfigScenarios(t *testing.T) {
 				ConfigMaps: &configmapfakes.ConfigMapInterfaceMock{
 					GetNamespacedFunc: func(namespace string, name string, opts metav1.GetOptions) (*v1.ConfigMap, error) {
 						// NOTE: we are not testing the configmap itself. Just need to return a valid configmap.
-						return &v1.ConfigMap{
-							Data: map[string]string{
-								"data": "{}",
-							},
-						}, nil
+						if name == cspAdapterConfigmap {
+							return &v1.ConfigMap{
+								Data: map[string]string{
+									"data": "{}",
+								},
+							}, nil
+						} else {
+							return &v1.ConfigMap{
+                                                                Data: map[string]string{
+                                                                        "archive": "[]",
+                                                                },
+                                                        }, nil
+						}
 					},
 				},
 				SubjectAccessReviews: k8sClient.AuthorizationV1().SubjectAccessReviews(),
