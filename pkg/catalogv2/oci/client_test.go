@@ -344,8 +344,8 @@ func TestFetchChart(t *testing.T) {
 			}
 
 			expoValues := v1.ExponentialBackOffValues{
-				MinWait: &metav1.Duration{Duration: time.Duration(1 * time.Second)},
-				MaxWait: &metav1.Duration{Duration: time.Duration(1 * time.Second)},
+				MinWait: "1s",
+				MaxWait: "1s",
 			}
 
 			ociClient, err := NewClient(fmt.Sprintf("%s/testingchart:0.1.0", strings.Replace(ts.URL, "http", "oci", 1)), v1.RepoSpec{ExponentialBackOffValues: &expoValues}, nil)
@@ -391,8 +391,8 @@ func TestGetOrasRegistry(t *testing.T) {
 			insecurePlainHTTP: true,
 			exponentialBackOffValues: &v1.ExponentialBackOffValues{
 				MaxRetries: 5,
-				MaxWait:    &metav1.Duration{Duration: time.Duration(5)},
-				MinWait:    &metav1.Duration{Duration: time.Duration(5)},
+				MaxWait:    "5s",
+				MinWait:    "5s",
 			},
 		},
 	}
